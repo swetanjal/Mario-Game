@@ -17,35 +17,43 @@ class Game:
 		self.__mario = Mario(0, BOARD_HEIGHT - 3 - 3)
 		self.__bricks = []
 
-	
+	def invalid(self):
+		if self.__mario.Y >= BOARD_HEIGHT - 5:
+			print("GAME OVER!")
+			return True
+		return False
 	#Starts a new game. This controls the flow of the game i.e accepts input, redraws the screen etc.
 	def startNewGame(self):
 		INPUT = Input()
 		while True:
+			if self.invalid():
+				break
 			sleep(1/12)
 			if INPUT.checkStream():
 				x = INPUT.getFromStream()
 				INPUT.clearStream()
 				if x == 'd':
 					if self.__mario.jump_state == 1:
-						self.__mario.update(3, Person.gravity[self.__mario.jump_idx], self.__board.left)
+						self.__mario.update(3, Person.gravity[self.__mario.jump_idx], self.__board.left, self.__board)
 					else:	
-						self.__mario.update(1, 0, self.__board.left)
+						self.__mario.update(1, 0, self.__board.left, self.__board)
 				elif x == 'a':
 					if self.__mario.jump_state == 1:
-						self.__mario.update(-3, Person.gravity[self.__mario.jump_idx], self.__board.left)
+						self.__mario.update(-3, Person.gravity[self.__mario.jump_idx], self.__board.left, self.__board)
 					else:
-						self.__mario.update(-1, 0, self.__board.left)	
+						self.__mario.update(-1, 0, self.__board.left, self.__board)	
 				elif x == 'w' and self.__mario.jump_state == 0:
 					self.__mario.jump_state = 1
-					self.__mario.update(0, Person.gravity[self.__mario.jump_idx], self.__board.left)
+					self.__mario.update(0, Person.gravity[self.__mario.jump_idx], self.__board.left, self.__board)
 					#self.__mario.update(0, -1, self.__board.left)
 				elif self.__mario.jump_state == 1:
-					self.__mario.update(0, Person.gravity[self.__mario.jump_idx], self.__board.left)
+					self.__mario.update(0, Person.gravity[self.__mario.jump_idx], self.__board.left, self.__board)
 			elif self.__mario.jump_state == 1:
-					self.__mario.update(0, Person.gravity[self.__mario.jump_idx], self.__board.left)
+					if self.__mario.jump_idx < len(Person.gravity):
+						self.__mario.update(0, Person.gravity[self.__mario.jump_idx], self.__board.left, self.__board)
+			if self.invalid():
+				break
 			self.__board.show(self.__mario)
-
 #Creates a Game object and starts the game
 game = Game()
 game.startNewGame()

@@ -26,7 +26,10 @@ class Board:
 					self.bricks.append(obj)
 		cnt = 0
 		for i in range(0, 5 * BOARD_WIDTH, 3):
-			if cnt == 5:
+			if cnt == randint(10, 20):
+				cnt = 0
+				continue
+			if cnt > 20:
 				cnt = 0
 				continue
 			t_X = i
