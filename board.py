@@ -3,12 +3,19 @@ from os import system
 from time import sleep
 from config import *
 from brick import *
+from pipe import *
 #Class for the scenery background.
 class Board:
 	#Sets up the scenery
+	def check_base(self, x, y, w, h):
+		for j in range(w):
+			if self.board[y + h][x + j] == ' ':
+				return False
+		return True
 	def __init__(self, BOARD_HEIGHT, BOARD_WIDTH):
 		self.board = [[' ' for j in range(10 * BOARD_WIDTH)]for i in range(BOARD_HEIGHT)]
 		self.bricks = []
+		self.pipes = []
 		self.left = 0
 		self.right = BOARD_WIDTH
 		for i in range(20):
@@ -36,6 +43,20 @@ class Board:
 			t_Y = BOARD_HEIGHT - 3
 			self.bricks.append(Brick(t_X, t_Y))
 			cnt = cnt + 1
+		cnt = 0
+		self.draw_bricks()
+		while cnt < 10:
+			t_X = randint(4, 5 * BOARD_WIDTH - 5)
+			t_h = randint(3, 5)
+			t_Y = BOARD_HEIGHT - 3 - t_h
+			fl2 = 0
+			for pipe in self.pipes:
+				if (pipe.X <= t_X and t_X <= pipe.X + 3) or (pipe.X <= t_X + 3 and t_X + 3 <= pipe.X + 3):
+					fl2 = 1
+					break 
+			if fl2 == 0 and self.check_base(t_X, t_Y, 3, t_h):
+				self.pipes.append(Pipe(t_X, t_Y, 3, t_h))
+				cnt = cnt + 1
 		self.__BOARD_HEIGHT = BOARD_HEIGHT
 		self.__BOARD_WIDTH = BOARD_WIDTH
 	def check_collision(self, mario):
@@ -62,11 +83,17 @@ class Board:
 			for i in range(3):
 				for j in range(3):
 					self.board[brick.Y + i][brick.X + j] = BRICK_SYMBOL
+	def draw_pipe(self):
+		for pipe in self.pipes:
+			for i in range(pipe.height):
+				for j in range(pipe.width):
+					self.board[pipe.Y + i][pipe.X + j] = PIPE_SYMBOL
 	def show(self, mario):
 		system("clear")
 		self.reint()
 		self.draw_mario(mario)
 		self.draw_bricks()
+		self.draw_pipe()
 		self.check_collision(mario)
 		if mario.X > (self.left + self.right)/2:
 			self.left = self.left + 1
