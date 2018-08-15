@@ -15,7 +15,6 @@ class Game:
 	def __init__(self):
 		self.__board = Board(BOARD_HEIGHT, BOARD_WIDTH)
 		self.__mario = Mario(0, BOARD_HEIGHT - 3 - 3)
-		self.__bricks = []
 
 	def invalid(self):
 		if self.__mario.Y >= BOARD_HEIGHT - 5:

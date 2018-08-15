@@ -19,7 +19,7 @@ class Board:
 				obj = Brick(t_X + j, t_Y)
 				flag = 0
 				for k in self.bricks:
-					if k.X <= obj.X and obj.X <= k.X + 3 and k.Y <= obj.Y and obj.Y <= k.Y + 3:
+					if (k.X <= obj.X and obj.X <= k.X + 2 and k.Y <= obj.Y and obj.Y <= k.Y + 3) or (k.X <= obj.X +2 and obj.X + 2 <= k.X + 2 and k.Y <= obj.Y and obj.Y <= k.Y + 2):
 						flag = 1
 						break
 				if flag == 0:
@@ -38,7 +38,16 @@ class Board:
 			cnt = cnt + 1
 		self.__BOARD_HEIGHT = BOARD_HEIGHT
 		self.__BOARD_WIDTH = BOARD_WIDTH
-
+	def check_collision(self, mario):
+		idx = -1
+		cnt = 0
+		for brick in self.bricks:
+			if (brick.X <= mario.X and mario.X <= brick.X + 2 and brick.Y <= mario.Y and mario.Y <= brick.Y + 2) or (brick.X <= mario.X + 2 and mario.X + 2 <= brick.X + 2 and brick.Y <= mario.Y and mario.Y <= brick.Y + 2):
+				idx = cnt
+				break
+			cnt = cnt + 1
+		if idx != -1:
+			del self.bricks[idx]
 	#Resets the board to empty
 	def reint(self):
 		self.board = [[' ' for j in range(10 * BOARD_WIDTH)]for i in range(BOARD_HEIGHT)]	
@@ -58,6 +67,7 @@ class Board:
 		self.reint()
 		self.draw_mario(mario)
 		self.draw_bricks()
+		self.check_collision(mario)
 		if mario.X > (self.left + self.right)/2:
 			self.left = self.left + 1
 			self.right = self.right + 1
