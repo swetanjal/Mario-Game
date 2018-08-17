@@ -4,6 +4,7 @@ from time import sleep
 from config import *
 from brick import *
 from pipe import *
+from enemy import *
 #Class for the scenery background.
 class Board:
 	#Sets up the scenery
@@ -57,8 +58,31 @@ class Board:
 			if fl2 == 0 and self.check_base(t_X, t_Y, 3, t_h):
 				self.pipes.append(Pipe(t_X, t_Y, 3, t_h))
 				cnt = cnt + 1
+		cnt = 0
+		self.enemies = []
+		while cnt < 10:
+			if self.create_enemy(randint(4, 5 * BOARD_WIDTH - 5)) == True:		
+				cnt = cnt + 1
 		self.__BOARD_HEIGHT = BOARD_HEIGHT
 		self.__BOARD_WIDTH = BOARD_WIDTH
+	
+	def create_enemy(self, X):
+		t_X = X
+		t_Y = BOARD_HEIGHT - 3 - ENEMY_HEIGHT
+		fl = 0
+		for pipe in self.pipes:
+			if pipe.X == t_X or pipe.X + 1 == t_X or pipe.X + 2 == t_X or  pipe.X == t_X + 2 or pipe.X + 1 == t_X + 2 or pipe.X + 2 == t_X + 2:
+				fl = 1
+				break
+		for enemy in self.enemies:
+			if (t_X >= enemy.X and t_X <= enemy.X + 2) or (t_X + 2 >= enemy.X and t_X + 2 <= enemy.X + 2):
+				fl = 1
+				break
+		if fl == 0:
+			self.enemies.append(Enemy(t_X, t_Y))
+			return True
+		return False
+	
 	def check_collision(self, mario):
 		idx = -1
 		cnt = 0
@@ -69,6 +93,15 @@ class Board:
 			cnt = cnt + 1
 		if idx != -1:
 			del self.bricks[idx]
+		idx = -1
+		cnt = 0
+		for brick in self.enemies:
+			if (brick.X <= mario.X and mario.X <= brick.X + 2 and brick.Y <= mario.Y + 2 and mario.Y + 2 <= brick.Y + 2) or (brick.X <= mario.X + 2 and mario.X + 2 <= brick.X + 2 and brick.Y <= mario.Y + 2 and mario.Y + 2 <= brick.Y + 2):
+				idx = cnt
+				break
+			cnt = cnt + 1
+		if idx != -1:
+			del self.enemies[idx]
 	#Resets the board to empty
 	def reint(self):
 		self.board = [[' ' for j in range(10 * BOARD_WIDTH)]for i in range(BOARD_HEIGHT)]	
@@ -88,12 +121,24 @@ class Board:
 			for i in range(pipe.height):
 				for j in range(pipe.width):
 					self.board[pipe.Y + i][pipe.X + j] = PIPE_SYMBOL
+
+	def draw_enemies(self):
+		for enemy in self.enemies:
+			for i in range(enemy.height):
+				for j in range(enemy.width):
+					self.board[enemy.Y + i][enemy.X + j] = ENEMY_SYMBOL
+	def update_enemies(self):
+		for enemy in self.enemies:
+			enemy.move(self.left, self)
+
 	def show(self, mario):
 		system("clear")
+		self.update_enemies()
 		self.reint()
 		self.draw_mario(mario)
 		self.draw_bricks()
 		self.draw_pipe()
+		self.draw_enemies()
 		self.check_collision(mario)
 		if mario.X > (self.left + self.right)/2:
 			self.left = self.left + 1

@@ -1,4 +1,5 @@
 #Class containing defintion of game characters like Mario, enemies, etc.
+
 class Person:
 	#Sets up the Person object
 	gravity = [-4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7]
@@ -18,10 +19,14 @@ class Person:
 					self.X = self.X + 1
 				if move_x < 0 and (board.board[self.Y][self.X - 1] != 'B' and board.board[self.Y + 1][self.X - 1] != 'B' and board.board[self.Y + 2][self.X - 1] != 'B'):
 					self.X = self.X - 1
-			if board.board[self.Y + 3][self.X] == ' ' and board.board[self.Y + 3][self.X + 2] == ' ' and self.jump_state == 0:
-				self.jump_state = 1
-				self.jump_idx = 4
-				move_y = Person.gravity[self.jump_idx]
+			try:
+				if board.board[self.Y + 3][self.X] == ' ' and board.board[self.Y + 3][self.X + 2] == ' ' and self.jump_state == 0:
+					self.jump_state = 1
+					self.jump_idx = 4
+					move_y = Person.gravity[self.jump_idx]
+			except:
+				pass
+
 		for i in range(abs(move_y)):
 			try:
 				if (board.board[self.Y + 3][self.X] == 'B' or board.board[self.Y + 3][self.X + 1] == 'B' or board.board[self.Y + 3][self.X + 2] == 'B') and Person.gravity[self.jump_idx] >= 0:
@@ -32,6 +37,7 @@ class Person:
 					self.Y = self.Y - 1
 				else:
 					self.Y = self.Y + 1
+				board.check_collision(self)
 			except:
 				flag = 1
 				#print("Idx")
