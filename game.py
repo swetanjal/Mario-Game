@@ -17,7 +17,7 @@ class Game:
 		self.__mario = Mario(0, BOARD_HEIGHT - 3 - 3)
 
 	def invalid(self):
-		if self.__mario.Y >= BOARD_HEIGHT - 5:
+		if self.__mario.Y >= BOARD_HEIGHT - 5 or self.__board.invalid(self.__mario) == True or self.__board.game_over == 1:
 			print("GAME OVER!")
 			return True
 		return False
@@ -33,23 +33,23 @@ class Game:
 				INPUT.clearStream()
 				if x == 'd':
 					if self.__mario.jump_state == 1:
-						self.__mario.update(3, Person.gravity[self.__mario.jump_idx], self.__board.left, self.__board)
+						self.__mario.update(3, Person.gravity[self.__mario.jump_idx], self.__board.left, self.__board, self.__mario)
 					else:	
-						self.__mario.update(1, 0, self.__board.left, self.__board)
+						self.__mario.update(1, 0, self.__board.left, self.__board, self.__mario)
 				elif x == 'a':
 					if self.__mario.jump_state == 1:
-						self.__mario.update(-3, Person.gravity[self.__mario.jump_idx], self.__board.left, self.__board)
+						self.__mario.update(-3, Person.gravity[self.__mario.jump_idx], self.__board.left, self.__board, self.__mario)
 					else:
-						self.__mario.update(-1, 0, self.__board.left, self.__board)	
+						self.__mario.update(-1, 0, self.__board.left, self.__board, self.__mario)	
 				elif x == 'w' and self.__mario.jump_state == 0:
 					self.__mario.jump_state = 1
-					self.__mario.update(0, Person.gravity[self.__mario.jump_idx], self.__board.left, self.__board)
+					self.__mario.update(0, Person.gravity[self.__mario.jump_idx], self.__board.left, self.__board, self.__mario)
 					#self.__mario.update(0, -1, self.__board.left)
 				elif self.__mario.jump_state == 1:
-					self.__mario.update(0, Person.gravity[self.__mario.jump_idx], self.__board.left, self.__board)
+					self.__mario.update(0, Person.gravity[self.__mario.jump_idx], self.__board.left, self.__board, self.__mario)
 			elif self.__mario.jump_state == 1:
 					if self.__mario.jump_idx < len(Person.gravity):
-						self.__mario.update(0, Person.gravity[self.__mario.jump_idx], self.__board.left, self.__board)
+						self.__mario.update(0, Person.gravity[self.__mario.jump_idx], self.__board.left, self.__board, self.__mario)
 			if self.invalid():
 				break
 			self.__board.show(self.__mario)

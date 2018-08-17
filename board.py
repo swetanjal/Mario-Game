@@ -19,6 +19,7 @@ class Board:
 		self.pipes = []
 		self.left = 0
 		self.right = BOARD_WIDTH
+		self.game_over = 0
 		for i in range(20):
 			t_X = randint(0, 5 * BOARD_WIDTH - 5)
 			t_Y = BRICK_LEVEL_1
@@ -61,11 +62,18 @@ class Board:
 		cnt = 0
 		self.enemies = []
 		while cnt < 10:
-			if self.create_enemy(randint(4, 5 * BOARD_WIDTH - 5)) == True:		
+			if self.create_enemy(randint(12, 5 * BOARD_WIDTH - 5)) == True:		
 				cnt = cnt + 1
 		self.__BOARD_HEIGHT = BOARD_HEIGHT
 		self.__BOARD_WIDTH = BOARD_WIDTH
 	
+	def invalid(self, mario):
+		for enemy in self.enemies:
+			if enemy.Y == mario.Y and (enemy.X == mario.X or enemy.X == mario.X + 1 or enemy.X == mario.X + 2 or enemy.X + 2 == mario.X or enemy.X + 2 == mario.X + 1 or enemy.X + 2 == mario.X + 2):
+				self.game_over = 1
+				return True
+		return False
+
 	def create_enemy(self, X):
 		t_X = X
 		t_Y = BOARD_HEIGHT - 3 - ENEMY_HEIGHT
@@ -127,13 +135,13 @@ class Board:
 			for i in range(enemy.height):
 				for j in range(enemy.width):
 					self.board[enemy.Y + i][enemy.X + j] = ENEMY_SYMBOL
-	def update_enemies(self):
+	def update_enemies(self, mario):
 		for enemy in self.enemies:
-			enemy.move(self.left, self)
+			enemy.move(self.left, self, mario)
 
 	def show(self, mario):
 		system("clear")
-		self.update_enemies()
+		self.update_enemies(mario)
 		self.reint()
 		self.draw_mario(mario)
 		self.draw_bricks()
