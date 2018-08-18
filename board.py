@@ -5,6 +5,7 @@ from config import *
 from brick import *
 from pipe import *
 from enemy import *
+from boss import *
 #Class for the scenery background.
 class Board:
 	#Sets up the scenery
@@ -17,9 +18,12 @@ class Board:
 		self.board = [[' ' for j in range(10 * BOARD_WIDTH)]for i in range(BOARD_HEIGHT)]
 		self.bricks = []
 		self.pipes = []
+		self.fire = []
 		self.left = 0
 		self.right = BOARD_WIDTH
 		self.game_over = 0
+		self.boss = Boss(6 * BOARD_WIDTH, BOARD_HEIGHT - 3 - BOSS_HEIGHT, BOSS_HEIGHT, BOSS_WIDTH)
+		self.pipes.append(Pipe(4, BOARD_HEIGHT - 3 - 4, 3, 4))
 		for i in range(20):
 			t_X = randint(0, 5 * BOARD_WIDTH - 5)
 			t_Y = BRICK_LEVEL_1
@@ -34,7 +38,7 @@ class Board:
 				if flag == 0:
 					self.bricks.append(obj)
 		cnt = 0
-		for i in range(0, 5 * BOARD_WIDTH, 3):
+		for i in range(0, 10 * BOARD_WIDTH, 3):
 			if cnt == randint(10, 20):
 				cnt = 0
 				continue
@@ -67,11 +71,27 @@ class Board:
 		self.__BOARD_HEIGHT = BOARD_HEIGHT
 		self.__BOARD_WIDTH = BOARD_WIDTH
 	
+	def update_fire(self):
+		for fire in self.fire:
+			fire.update()
+
 	def invalid(self, mario):
 		for enemy in self.enemies:
 			if enemy.Y == mario.Y and (enemy.X == mario.X or enemy.X == mario.X + 1 or enemy.X == mario.X + 2 or enemy.X + 2 == mario.X or enemy.X + 2 == mario.X + 1 or enemy.X + 2 == mario.X + 2):
 				self.game_over = 1
 				return True
+		for i in range(mario.height):
+			for j in range(mario.width):
+				for k in range(self.boss.height):
+					for l in range(self.boss.width):
+						if mario.Y + i == self.boss.Y + k and mario.X + j == self.boss.X + l:
+							self.game_over = 1
+							return True
+		for i in range(3):
+			for j in range(3):
+					if self.board[mario.Y + i][mario.X + j] == FIRE_SYMBOL:
+						self.game_over = 1
+						return True 
 		return False
 
 	def create_enemy(self, X):
@@ -111,9 +131,15 @@ class Board:
 		if idx != -1:
 			del self.enemies[idx]
 	#Resets the board to empty
+
 	def reint(self):
 		self.board = [[' ' for j in range(10 * BOARD_WIDTH)]for i in range(BOARD_HEIGHT)]	
 	#Function that redraws Mario on the terminal
+	def draw_boss(self):
+		for i in range(BOSS_HEIGHT):
+			for j in range(BOSS_WIDTH):
+				self.board[self.boss.Y + i][self.boss.X + j] = BOSS_SYMBOL
+
 	def draw_mario(self, mario):
 		for i in range(MARIO_HEIGHT):
 			for j in range(MARIO_WIDTH):
@@ -139,14 +165,23 @@ class Board:
 		for enemy in self.enemies:
 			enemy.move(self.left, self, mario)
 
+	def draw_fire(self):
+		for fire in self.fire:
+			self.board[fire.Y][fire.X] = FIRE_SYMBOL
+
 	def show(self, mario):
 		system("clear")
+		self.boss.update()
 		self.update_enemies(mario)
 		self.reint()
 		self.draw_mario(mario)
 		self.draw_bricks()
 		self.draw_pipe()
+		self.draw_boss()
 		self.draw_enemies()
+		self.boss.fire_fire(mario, self)
+		self.update_fire()
+		self.draw_fire()
 		self.check_collision(mario)
 		if mario.X > (self.left + self.right)/2:
 			self.left = self.left + 1
