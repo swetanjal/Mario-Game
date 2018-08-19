@@ -17,7 +17,10 @@ class Game:
 		self.__mario = Mario(0, BOARD_HEIGHT - 3 - 3)
 
 	def invalid(self):
-		if self.__mario.Y >= BOARD_HEIGHT - 5 or self.__board.invalid(self.__mario) == True or self.__board.game_over == 1:
+		if self.__board.level_up == 1:
+			print("YOU WIN!")
+			return True
+		if self.__board.game_over == 1:
 			print("GAME OVER!")
 			return True
 		return False
@@ -50,9 +53,11 @@ class Game:
 			elif self.__mario.jump_state == 1:
 					if self.__mario.jump_idx < len(Person.gravity):
 						self.__mario.update(0, Person.gravity[self.__mario.jump_idx], self.__board.left, self.__board, self.__mario)
+			self.__board.show(self.__mario)
+			self.__board.invalid(self.__mario)
 			if self.invalid():
 				break
-			self.__board.show(self.__mario)
+			#self.__board.show(self.__mario)
 #Creates a Game object and starts the game
 game = Game()
 game.startNewGame()

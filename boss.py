@@ -10,20 +10,29 @@ class Boss(Person):
 		self.iniX = X
 		self.iniY = Y
 		self.cnt = 0
-	def update(self):
-		if abs(self.X - self.iniX) > 12:
+	def update(self, mario):
+		
+		if abs(self.iniX - self.X) > 12:
 			self.speed_X = -self.speed_X
 		if self.iniY - self.Y < 0:
 			self.speed_Y = -self.speed_Y
 		if self.iniY - self.Y > 12:
 			self.speed_Y = -self.speed_Y
+		if mario.X > self.X and self.Y == self.iniY:
+			self.speed_Y = 0
 		self.X = self.X + self.speed_X
 		self.Y = self.Y + self.speed_Y
+		self.mod = 24
 
 	def fire_fire(self, mario, board):
-		if abs(mario.X - self.X) < BOARD_WIDTH and self.cnt % 48 == 0:
+		if abs(mario.X - self.X) < 2 * BOARD_WIDTH and self.cnt % self.mod == 0:
 			sp = 1
+			self.mod = 36
 			if mario.X < self.X:
 				sp = -1
+				if sp == 1:
+					self.mod = 24
+			if mario.X - self.X > 0:
+				sp = sp * 3
 			board.fire.append(Fire(self.X, self.Y + randint(3, 6), sp))
 		self.cnt = self.cnt + 1

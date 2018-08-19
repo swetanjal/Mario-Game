@@ -6,6 +6,7 @@ from brick import *
 from pipe import *
 from enemy import *
 from boss import *
+from pole import * 
 #Class for the scenery background.
 class Board:
 	#Sets up the scenery
@@ -22,8 +23,9 @@ class Board:
 		self.left = 0
 		self.right = BOARD_WIDTH
 		self.game_over = 0
-		self.boss = Boss(6 * BOARD_WIDTH, BOARD_HEIGHT - 3 - BOSS_HEIGHT, BOSS_HEIGHT, BOSS_WIDTH)
+		self.boss = Boss(6 * BOARD_WIDTH, BOARD_HEIGHT - 3 - BOSS_HEIGHT - 1, BOSS_HEIGHT, BOSS_WIDTH)
 		self.pipes.append(Pipe(4, BOARD_HEIGHT - 3 - 4, 3, 4))
+		self.pole = Pole(7 * BOARD_WIDTH, BOARD_HEIGHT - 3 - 12, 12)
 		for i in range(20):
 			t_X = randint(0, 5 * BOARD_WIDTH - 5)
 			t_Y = BRICK_LEVEL_1
@@ -70,12 +72,18 @@ class Board:
 				cnt = cnt + 1
 		self.__BOARD_HEIGHT = BOARD_HEIGHT
 		self.__BOARD_WIDTH = BOARD_WIDTH
-	
-	def update_fire(self):
+		self.level_up = 0	
+	def show_pole(self):
+		for i in range(self.pole.height):
+			self.board[self.pole.Y + i][self.pole.X] = POLE_SYMBOL
+	def update_fire(self, mario):
 		for fire in self.fire:
-			fire.update()
+			fire.update(mario, self)
 
 	def invalid(self, mario):
+		if mario.Y >= BOARD_HEIGHT - 5:
+			self.game_over = 1
+			return True
 		for enemy in self.enemies:
 			if enemy.Y == mario.Y and (enemy.X == mario.X or enemy.X == mario.X + 1 or enemy.X == mario.X + 2 or enemy.X + 2 == mario.X or enemy.X + 2 == mario.X + 1 or enemy.X + 2 == mario.X + 2):
 				self.game_over = 1
@@ -89,9 +97,14 @@ class Board:
 							return True
 		for i in range(3):
 			for j in range(3):
-					if self.board[mario.Y + i][mario.X + j] == FIRE_SYMBOL:
-						self.game_over = 1
-						return True 
+					for k in self.fire:
+						for l in range(2):
+							for m in range(2):
+								if mario.Y + i == k.Y + l and mario.X + j == k.X + m:
+									self.game_over = 1
+									return True
+		if mario.X + 2 == self.pole.X:
+			self.level_up = 1
 		return False
 
 	def create_enemy(self, X):
@@ -167,22 +180,35 @@ class Board:
 
 	def draw_fire(self):
 		for fire in self.fire:
-			self.board[fire.Y][fire.X] = FIRE_SYMBOL
+			for i in range(2):
+				for j in range(2):
+					self.board[fire.Y + i][fire.X + j] = FIRE_SYMBOL
+
+	def destruct(self):
+		cnt = 0
+		for fire in self.fire:
+			if fire.X + 2 > 7 * BOARD_WIDTH:
+				del self.fire[cnt]
+			cnt = cnt + 1
 
 	def show(self, mario):
 		system("clear")
-		self.boss.update()
+		self.boss.update(mario)
 		self.update_enemies(mario)
 		self.reint()
 		self.draw_mario(mario)
 		self.draw_bricks()
 		self.draw_pipe()
 		self.draw_boss()
+		self.show_pole()
 		self.draw_enemies()
 		self.boss.fire_fire(mario, self)
-		self.update_fire()
+		self.update_fire(mario)
 		self.draw_fire()
 		self.check_collision(mario)
+		self.invalid(mario)
+		self.draw_mario(mario)
+		self.destruct()
 		if mario.X > (self.left + self.right)/2:
 			self.left = self.left + 1
 			self.right = self.right + 1

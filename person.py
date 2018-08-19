@@ -39,6 +39,9 @@ class Person:
 				else:
 					self.Y = self.Y + 1
 				board.check_collision(self)
+				#board.draw_mario()
+				board.invalid(mario)
+
 			except:
 				flag = 1
 				#print("Idx")
