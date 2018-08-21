@@ -20,3 +20,4 @@ BOSS_WIDTH = 6
 BOSS_SYMBOL = 'F'
 FIRE_SYMBOL = '*'
 POLE_SYMBOL = 'G'
+cloud = ["   __..._   "," _(..)_(.)_ ","(_..._...._)","  (_) (__)  "]

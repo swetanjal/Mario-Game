@@ -7,6 +7,7 @@ from pipe import *
 from enemy import *
 from boss import *
 from pole import * 
+import subprocess
 from colorama import Fore, Back
 #Class for the scenery background.
 class Board:
@@ -16,17 +17,22 @@ class Board:
 			if self.board[y + h][x + j] == ' ':
 				return False
 		return True
-	def __init__(self, BOARD_HEIGHT, BOARD_WIDTH):
+	def __init__(self, BOARD_HEIGHT, BOARD_WIDTH, level):
 		self.board = [[' ' for j in range(10 * BOARD_WIDTH)]for i in range(BOARD_HEIGHT)]
 		self.bricks = []
 		self.pipes = []
 		self.fire = []
 		self.left = 0
+		self.level = level
 		self.right = BOARD_WIDTH
 		self.game_over = 0
 		self.boss = Boss(6 * BOARD_WIDTH, BOARD_HEIGHT - 3 - BOSS_HEIGHT - 1, BOSS_HEIGHT, BOSS_WIDTH)
 		self.pipes.append(Pipe(4, BOARD_HEIGHT - 3 - 4, 3, 4))
 		self.pole = Pole(7 * BOARD_WIDTH, BOARD_HEIGHT - 3 - 12, 12)
+		for x in range(0, 9 * BOARD_WIDTH, 60):
+			for i in range(len(cloud)):
+				for j in range(len(cloud[i])):
+					self.board[15 + i][x + j] = cloud[i][j]
 		for i in range(20):
 			t_X = randint(0, 5 * BOARD_WIDTH - 5)
 			t_Y = BRICK_LEVEL_1
@@ -41,9 +47,12 @@ class Board:
 				if flag == 0:
 					self.bricks.append(obj)
 		cnt = 0
+		fll = 0
 		for i in range(0, 10 * BOARD_WIDTH, 3):
-			if cnt == randint(10, 20):
+			if cnt == randint(10, 20) or fll == 1:
 				cnt = 0
+				if self.level == 2:
+					fll = 1 - fll
 				continue
 			if cnt > 20:
 				cnt = 0
@@ -124,7 +133,8 @@ class Board:
 			self.enemies.append(Enemy(t_X, t_Y))
 			return True
 		return False
-	
+	def play_brick_break(self):
+		self.brick_sound = subprocess.Popen(["aplay", "-q", "./mario break brick sound effect (loud).wav"])
 	def check_collision(self, mario):
 		idx = -1
 		cnt = 0
@@ -134,6 +144,7 @@ class Board:
 				break
 			cnt = cnt + 1
 		if idx != -1:
+			self.play_brick_break()
 			del self.bricks[idx]
 		idx = -1
 		cnt = 0
@@ -147,7 +158,11 @@ class Board:
 	#Resets the board to empty
 
 	def reint(self):
-		self.board = [[' ' for j in range(10 * BOARD_WIDTH)]for i in range(BOARD_HEIGHT)]	
+		self.board = [[' ' for j in range(10 * BOARD_WIDTH)]for i in range(BOARD_HEIGHT)]
+		for x in range(0, 9 * BOARD_WIDTH, 60):
+			for i in range(len(cloud)):
+				for j in range(len(cloud[i])):
+					self.board[15 + i][x + j] = cloud[i][j]	
 	#Function that redraws Mario on the terminal
 	def draw_boss(self):
 		for i in range(BOSS_HEIGHT):
@@ -191,7 +206,6 @@ class Board:
 			if fire.X + 2 > 7 * BOARD_WIDTH:
 				del self.fire[cnt]
 			cnt = cnt + 1
-
 	def show(self, mario):
 		system("clear")
 		self.boss.update(mario)
@@ -203,7 +217,8 @@ class Board:
 		self.draw_boss()
 		self.show_pole()
 		self.draw_enemies()
-		self.boss.fire_fire(mario, self)
+		if self.level == 2:
+			self.boss.fire_fire(mario, self)
 		self.update_fire(mario)
 		self.draw_fire()
 		self.check_collision(mario)
@@ -233,9 +248,14 @@ class Board:
 				elif self.board[i][j] == FIRE_SYMBOL:
 					print(Fore.RED + self.board[i][j], end = '')
 				elif self.board[i][j] == POLE_SYMBOL:
-					print(Fore.BLACK + self.board[i][j], end = '')
+					if self.level == 2:
+						print(Fore.YELLOW + self.board[i][j], end = '')
+					else:	
+						print(Fore.BLACK + self.board[i][j], end = '')
 				elif self.board[i][j] == PIPE_SYMBOL:
 					print(Fore.GREEN + self.board[i][j], end = '')
+				elif self.level == 2 and i >= BOARD_HEIGHT - 6 and i <= BOARD_HEIGHT - 3 and self.board[i][j] == ' ':
+					print(Back.BLACK + self.board[i][j], end = '') 
 				else:
 					print(Fore.WHITE + self.board[i][j], end = '')
 				#s = s + self.board[i][j]
