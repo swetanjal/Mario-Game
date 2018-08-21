@@ -1,5 +1,5 @@
 #Class containing defintion of game characters like Mario, enemies, etc.
-
+from config import *
 class Person:
 	#Sets up the Person object
 	gravity = [-4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7]
@@ -17,7 +17,7 @@ class Person:
 			for i in range(abs(move_x)):
 				if move_x > 0 and (board.board[self.Y][self.X + 3] != 'B' and board.board[self.Y + 1][self.X + 3] != 'B' and board.board[self.Y + 2][self.X + 3] != 'B'):
 					self.X = self.X + 1
-				if move_x < 0 and (board.board[self.Y][self.X - 1] != 'B' and board.board[self.Y + 1][self.X - 1] != 'B' and board.board[self.Y + 2][self.X - 1] != 'B'):
+				if (move_x < 0 and (board.board[self.Y][self.X - 1] != 'B' and board.board[self.Y + 1][self.X - 1] != 'B' and board.board[self.Y + 2][self.X - 1] != 'B')):
 					self.X = self.X - 1 
 				board.invalid(mario)
 			try:
@@ -30,7 +30,7 @@ class Person:
 
 		for i in range(abs(move_y)):
 			try:
-				if (board.board[self.Y + 3][self.X] == 'B' or board.board[self.Y + 3][self.X + 1] == 'B' or board.board[self.Y + 3][self.X + 2] == 'B') and Person.gravity[self.jump_idx] >= 0:
+				if (board.board[self.Y + 3][self.X] == 'B' or board.board[self.Y + 3][self.X] == PIPE_SYMBOL or board.board[self.Y + 3][self.X + 1] == 'B' or board.board[self.Y + 3][self.X + 1] == PIPE_SYMBOL or board.board[self.Y + 3][self.X + 2] == 'B' or board.board[self.Y + 3][self.X + 2] == PIPE_SYMBOL) and Person.gravity[self.jump_idx] >= 0:
 					self.jump_idx = 0
 					self.jump_state = 0
 					return	

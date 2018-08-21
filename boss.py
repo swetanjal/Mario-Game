@@ -27,12 +27,18 @@ class Boss(Person):
 	def fire_fire(self, mario, board):
 		if abs(mario.X - self.X) < 2 * BOARD_WIDTH and self.cnt % self.mod == 0:
 			sp = 1
-			self.mod = 36
+			self.mod = 48
 			if mario.X < self.X:
 				sp = -1
 				if sp == 1:
 					self.mod = 24
 			if mario.X - self.X > 0:
 				sp = sp * 3
-			board.fire.append(Fire(self.X, self.Y + randint(3, 6), sp))
+			xxx = self.X
+			flag = 1
+			for fire in board.fire:
+				if abs(fire.X - xxx) <= 5:
+					flag = 0
+			if flag == 1:
+				board.fire.append(Fire(self.X, self.Y + randint(3, 6), sp))
 		self.cnt = self.cnt + 1

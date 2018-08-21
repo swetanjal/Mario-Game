@@ -7,6 +7,7 @@ from pipe import *
 from enemy import *
 from boss import *
 from pole import * 
+from colorama import Fore, Back
 #Class for the scenery background.
 class Board:
 	#Sets up the scenery
@@ -215,6 +216,28 @@ class Board:
 		for i in range(BOARD_HEIGHT):
 			s = ""
 			for j in range(self.left, self.right):
-				s = s + self.board[i][j]
-			print(s)
+				if self.board[i][j] == MARIO_SYMBOL:
+					print(Fore.CYAN + self.board[i][j], end='')
+				elif self.board[i][j] == 'B':
+					if i >= BOARD_HEIGHT - 3 or i < BOARD_HEIGHT - 9:
+						print(Fore.YELLOW + self.board[i][j], end = '')
+					else:
+						print(Fore.GREEN + self.board[i][j], end = '')
+				elif self.board[i][j] == ENEMY_SYMBOL:
+					print(Fore.MAGENTA + self.board[i][j], end = '')
+				elif self.board[i][j] == ' ' and i > BOARD_HEIGHT - 3:
+					self.board[i][j] = '.'
+					print(Fore.BLUE + self.board[i][j], end = '')
+				elif self.board[i][j] == BOSS_SYMBOL:
+					print(Fore.RED + self.board[i][j], end = '')
+				elif self.board[i][j] == FIRE_SYMBOL:
+					print(Fore.RED + self.board[i][j], end = '')
+				elif self.board[i][j] == POLE_SYMBOL:
+					print(Fore.BLACK + self.board[i][j], end = '')
+				elif self.board[i][j] == PIPE_SYMBOL:
+					print(Fore.GREEN + self.board[i][j], end = '')
+				else:
+					print(Fore.WHITE + self.board[i][j], end = '')
+				#s = s + self.board[i][j]
+			print()
 		print()
