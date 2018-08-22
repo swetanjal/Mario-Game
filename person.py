@@ -2,7 +2,7 @@
 from config import *
 class Person:
 	#Sets up the Person object
-	gravity = [-4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7]
+	gravity = [-4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8]
 	def __init__(self, X, Y, HEIGHT, WIDTH):
 		self.X = X
 		self.Y = Y

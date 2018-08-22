@@ -10,12 +10,19 @@ from person import *
 from colorama import Fore, Back
 #from brick import *
 import subprocess
+import time
 class Game:
 
 	#Creates all the important elements of the game
 	def __init__(self, level):
 		self.__board = Board(BOARD_HEIGHT, BOARD_WIDTH, level)
-		self.__mario = Mario(0, BOARD_HEIGHT - 3 - 3)
+		self.__level = level
+		self.ini_time = time.clock()
+		if level == 2:
+			self.__mario = Mario(1, BOARD_HEIGHT - 3 - 3 - 30)
+			self.__mario.update(0, 0, 0, self.__board, self.__mario)
+		else:	
+			self.__mario = Mario(0, BOARD_HEIGHT - 3 - 3)
 		if level == 1:
 			self.bg_music = subprocess.Popen(["aplay", "-q", "./Super Mario Bros. Soundtrack.wav"])
 		else:
@@ -27,14 +34,31 @@ class Game:
 			self.jump_music.kill()
 			self.play_win_music()
 			sleep(2)
-			print("YOU WIN!")
+			if self.__level == 1:
+				now = time.clock()
+				penalty = now - self.ini_time
+				print("YOUR FINAL SCORE = " + str(self.__board.score - (penalty/10)))
+				print()
+				print(Fore.RED + "CONGRATULATIONS! YOU PROGRESS TO NEXT LEVEL!!!")
+				
+			else:
+				now = time.clock()
+				penalty = now - self.ini_time
+				print("YOUR FINAL SCORE = " + str(self.__board.score - (penalty/10)))
+				print()
+				print(Fore.RED + "YOU WIN!")
+
 			self.win = 1
 			return True
 		if self.__board.game_over == 1:
 			self.bg_music.kill()
 			self.jump_music.kill()
 			self.play_death_music()
+			now = time.clock()
+			penalty = now - self.ini_time
 			sleep(2)
+			print("YOUR FINAL SCORE = " + str(self.__board.score - (penalty/10)))
+			print()
 			print(Fore.RED + "GAME OVER!")
 			#sleep(1)
 			return True
