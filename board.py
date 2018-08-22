@@ -37,10 +37,12 @@ class Board:
 					for j in range(len(cloud[i])):
 						self.board[15 + i][x + j] = cloud[i][j]
 		else:
-			for x in range(0, 9 * BOARD_WIDTH, 60):
-				for i in range(len(cloud2)):
-					for j in range(len(cloud2[i])):
-						self.board[15 + i][x + j] = cloud2[i][j]
+			for x in range(4, 9 * BOARD_WIDTH, 3):
+				self.bricks.append(Brick(x, 15))
+			#for x in range(0, 9 * BOARD_WIDTH, 60):
+			#	for i in range(len(cloud2)):
+			#		for j in range(len(cloud2[i])):
+			#			self.board[15 + i][x + j] = cloud2[i][j]
 		for i in range(20):
 			t_X = randint(0, 5 * BOARD_WIDTH - 5)
 			t_Y = BRICK_LEVEL_1
@@ -205,10 +207,11 @@ class Board:
 					for j in range(len(cloud[i])):
 						self.board[15 + i][x + j] = cloud[i][j]
 		else:
-			for x in range(0, 9 * BOARD_WIDTH, 60):
-				for i in range(len(cloud2)):
-					for j in range(len(cloud2[i])):
-						self.board[15 + i][x + j] = cloud2[i][j]	
+			pass
+			#for x in range(0, 9 * BOARD_WIDTH, 60):
+			#	for i in range(len(cloud2)):
+			#		for j in range(len(cloud2[i])):
+			#			self.board[15 + i][x + j] = cloud2[i][j]	
 	#Function that redraws Mario on the terminal
 	def draw_boss(self):
 		for i in range(BOSS_HEIGHT):
@@ -284,8 +287,10 @@ class Board:
 				if self.board[i][j] == MARIO_SYMBOL:
 					print(Fore.CYAN + self.board[i][j], end='')
 				elif self.board[i][j] == 'B':
-					if i >= BOARD_HEIGHT - 3 or i < BOARD_HEIGHT - 9:
-						print(Fore.YELLOW + self.board[i][j], end = '')
+					if i <= 18:
+						print(Fore.BLUE + self.board[i][j], end = '')
+					elif i >= BOARD_HEIGHT - 3 or i < BOARD_HEIGHT - 9:
+						print(Fore.YELLOW + self.board[i][j], end = '')	
 					else:
 						print(Fore.GREEN + self.board[i][j], end = '')
 				elif self.board[i][j] == ENEMY_SYMBOL:
