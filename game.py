@@ -24,9 +24,9 @@ class Game:
 		else:	
 			self.__mario = Mario(0, BOARD_HEIGHT - 3 - 3)
 		if level == 1:
-			self.bg_music = subprocess.Popen(["aplay", "-q", "./Super Mario Bros. Soundtrack.wav"])
+			self.bg_music = subprocess.Popen(["aplay", "-q", "./Sound/Super Mario Bros. Soundtrack.wav"])
 		else:
-			self.bg_music = subprocess.Popen(["aplay", "-q", "./Super Mario Underground Themes 1985 - 2010.wav"])
+			self.bg_music = subprocess.Popen(["aplay", "-q", "./Sound/Super Mario Underground Themes 1985 - 2010.wav"])
 		self.win = 0
 	def invalid(self):
 		if self.__board.level_up == 1:
@@ -65,11 +65,11 @@ class Game:
 		return False
 	#Starts a new game. This controls the flow of the game i.e accepts input, redraws the screen etc.
 	def play_death_music(self):
-		self.bg_music = subprocess.Popen(["aplay", "-q", "./Super Mario Death Sound - Sound Effect.wav"])
+		self.bg_music = subprocess.Popen(["aplay", "-q", "./Sound/Super Mario Death Sound - Sound Effect.wav"])
 	def play_win_music(self):
-		self.win_music = subprocess.Popen(["aplay", "-q", "./Super Mario Bros. Music - Level Complete.wav"])
+		self.win_music = subprocess.Popen(["aplay", "-q", "./Sound/Super Mario Bros. Music - Level Complete.wav"])
 	def play_jump_music(self):
-		self.jump_music = subprocess.Popen(["aplay", "-q", "./Mario jump sound effect +free download.wav"])
+		self.jump_music = subprocess.Popen(["aplay", "-q", "./Sound/Mario jump sound effect +free download.wav"])
 	def startNewGame(self):
 		INPUT = Input()
 		while True:

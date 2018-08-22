@@ -161,9 +161,9 @@ class Board:
 			return True
 		return False
 	def play_brick_break(self):
-		self.brick_sound = subprocess.Popen(["aplay", "-q", "./mario break brick sound effect (loud).wav"])
+		self.brick_sound = subprocess.Popen(["aplay", "-q", "./Sound/mario break brick sound effect (loud).wav"])
 	def play_coin_collect(self):
-		self.coin_sound = subprocess.Popen(["aplay", "-q", "./Super Mario Bros.-Coin Sound Effect.wav"])
+		self.coin_sound = subprocess.Popen(["aplay", "-q", "./Sound/Super Mario Bros.-Coin Sound Effect.wav"])
 	def check_collision(self, mario):
 		idx = -1
 		cnt = 0
