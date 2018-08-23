@@ -23,4 +23,12 @@
 
 6. Randomly generated map. Randomly generated enemies. But makes sure that obstacles/enemies are generated without any glitch. For example care is taken so that pipes are not generated on water. Similarly two enemies are not generated at the same place or where a pipe exists.
 
-7. Smart boss enemy. Has a pseudo random motion and throws fireballs at Mario. After Mario surpasses it, the Boss enemy starts chasing Mario till the pole and by throwing fire balls at an exponentially faster rate. All these speeds have been thoroughly experimented and tested to give a very enthralling gameplay.
+7. Smart boss enemy, bigger in size than the other enemies. Has a pseudo random motion and throws fireballs at Mario. After Mario surpasses it, the Boss enemy starts chasing Mario till the pole and by throwing fire balls at an exponentially faster rate. All these speeds have been thoroughly experimented and tested to give a very enthralling gameplay.
+
+8. Score implemented as a function of time duration of level. Displayed score at the bottom does not include time penalty. Score is given for killing enemies, collecting coins and breaking bricks. Final score including time penalty is calculated and displayed at the end of the level.
+
+9. Coloring of the background using Colorama
+
+10. Scrolling background implemented exactly as in original game. Mario moves in the frame till the middleand then frame starts scrolling. Also, care has been taken so that Mario cannot go back in previous frame as in the original game.
+
+11. Gravity like jump effect.
