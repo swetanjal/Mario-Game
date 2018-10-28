@@ -1,3 +1,4 @@
+"""Constants required for the game."""
 BOARD_WIDTH = 84
 BOARD_HEIGHT = 42
 BRICK_HEIGHT = 3
